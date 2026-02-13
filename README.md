@@ -1,226 +1,679 @@
-> **🚀 Don't want to self-host?** [Join the waitlist for our fully managed solution →](https://mcpengage.com/zendesk)
-> 
-> Zero setup. Zero maintenance. Just connect and automate.
+# Zendesk MCP Server
 
----
+A comprehensive Model Context Protocol (MCP) server providing complete coverage of the Zendesk Support API with 89 tools across 16 functional areas, plus 13 rich React UI applications for interactive data exploration and management.
 
-# 🚀 Zendesk MCP Server — 2026 Complete Version
+## 🌟 Features
 
-## 💡 What This Unlocks
+- **Complete API Coverage**: 89 MCP tools spanning tickets, users, organizations, groups, tags, brands, triggers, macros, automations, views, custom fields, SLA policies, satisfaction ratings, suspended tickets, and search
+- **Rich UI Applications**: 13 interactive React apps for dashboards, detail views, and data grids
+- **Automatic Pagination**: Cursor-based and URL-based pagination handled transparently
+- **Rate Limit Awareness**: Built-in rate limiting to respect Zendesk API quotas
+- **TypeScript**: Full type safety with comprehensive TypeScript definitions
+- **Dual Authentication**: Support for both OAuth tokens and API token authentication
 
-**This MCP server gives AI direct access to your Zendesk customer support platform.** Instead of manually triaging tickets, assigning agents, or searching for customer issues, just *tell* AI what you need.
+## 📦 Installation
 
-### 🎧 Customer Support Power Moves
+```bash
+npm install -g @mcpengine/zendesk-mcp-server
+```
 
-The AI can manage your entire support operation with natural language:
+Or use directly with npx:
 
-| Use Case | What AI Does | Tools Used |
-|----------|--------------|------------|
-| **"Show me all urgent tickets that have been open for more than 3 days without agent response"** | Filters tickets by priority, age, and comment history | `search_tickets`, `get_ticket` |
-| **"Create ticket from customer email: subject 'Billing issue', assign to billing team, priority high"** | Creates ticket with proper routing and escalation | `create_ticket`, `list_users` |
-| **"Bulk update: mark all tickets tagged 'login-bug' as solved with comment 'Fixed in v2.1'"** | Updates multiple tickets with status change and internal note | `search_tickets`, `update_ticket`, `add_comment` |
-| **"Generate SLA report: tickets by status, average resolution time, agent workload distribution"** | Aggregates ticket metrics and agent activity for performance analysis | `list_tickets`, `search_tickets`, `list_users` |
-| **"Find tickets from VIP customers (tag: enterprise) opened in the last 7 days, escalate any still open"** | Searches by customer segment, checks status, updates priority | `search_tickets`, `update_ticket` |
-
-### 🔗 The Real Power: Support Automation
-
-AI chains Zendesk operations together:
-
-- **Intelligent triage** → Search tickets by keywords → Classify by issue type → Auto-assign to specialists
-- **Escalation workflows** → Monitor ticket age → Check priority → Update status → Notify management
-- **Knowledge mining** → Analyze solved tickets → Identify common issues → Flag for documentation
-
-## 📦 What's Inside
-
-**7 customer support tools** covering tickets, users, search, and comments:
-
-1. **`list_tickets`** — List tickets with filters for status, priority, or date, with sorting options
-2. **`get_ticket`** — Get complete ticket details including all comments, tags, and audit history
-3. **`create_ticket`** — Create new tickets with subject, description, requester info, priority, and assignments
-4. **`update_ticket`** — Modify ticket properties: status, priority, assignee, tags (add/remove/replace)
-5. **`add_comment`** — Add public comments (visible to customer) or internal notes to tickets
-6. **`list_users`** — List agents, admins, or end-users with role filtering
-7. **`search_tickets`** — Advanced search with Zendesk query syntax: `status:open priority:urgent assignee:me`
-
-All with automatic authentication, proper error handling, and TypeScript types.
+```bash
+npx @mcpengine/zendesk-mcp-server
+```
 
 ## 🚀 Quick Start
 
-### Option 1: Claude Desktop (Local)
+### Configuration
 
-1. **Clone and build:**
-   ```bash
-   git clone https://github.com/BusyBee3333/Zendesk-MCP-2026-Complete.git
-   cd zendesk-mcp-2026-complete
-   npm install
-   npm run build
-   ```
+The server requires Zendesk credentials. You can authenticate using either:
 
-2. **Get your Zendesk API credentials:**
-   - Log in to Zendesk
-   - Go to **Admin Center → Apps and integrations → APIs → Zendesk API**
-   - Click **Add API token**
-   - Copy the token and note your:
-     - Subdomain (e.g., `mycompany` for `mycompany.zendesk.com`)
-     - Agent email address
-     - API token
-   - Required permissions: Tickets (read/write), Users (read)
-
-3. **Configure Claude Desktop:**
-   
-   On macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   
-   On Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-
-   ```json
-   {
-     "mcpServers": {
-       "zendesk": {
-         "command": "node",
-         "args": ["/ABSOLUTE/PATH/TO/zendesk-mcp-2026-complete/dist/index.js"],
-         "env": {
-           "ZENDESK_SUBDOMAIN": "mycompany",
-           "ZENDESK_EMAIL": "agent@mycompany.com",
-           "ZENDESK_API_TOKEN": "your-api-token"
-         }
-       }
-     }
-   }
-   ```
-
-4. **Restart Claude Desktop**
-
-### Option 2: Deploy to Railway
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/zendesk-mcp)
-
-1. Click the button above
-2. Set your Zendesk credentials in Railway dashboard
-3. Use the Railway URL as your MCP server endpoint
-
-### Option 3: Docker
-
-```bash
-docker build -t zendesk-mcp .
-docker run -p 3000:3000 \
-  -e ZENDESK_SUBDOMAIN=mycompany \
-  -e ZENDESK_EMAIL=agent@mycompany.com \
-  -e ZENDESK_API_TOKEN=your-token \
-  zendesk-mcp
+**Option 1: API Token (recommended)**
+```json
+{
+  "mcpServers": {
+    "zendesk": {
+      "command": "npx",
+      "args": ["-y", "@mcpengine/zendesk-mcp-server"],
+      "env": {
+        "ZENDESK_SUBDOMAIN": "your-subdomain",
+        "ZENDESK_EMAIL": "your-email@example.com",
+        "ZENDESK_API_TOKEN": "your-api-token"
+      }
+    }
+  }
+}
 ```
 
-## 🔐 Authentication
+**Option 2: OAuth Token**
+```json
+{
+  "mcpServers": {
+    "zendesk": {
+      "command": "npx",
+      "args": ["-y", "@mcpengine/zendesk-mcp-server"],
+      "env": {
+        "ZENDESK_SUBDOMAIN": "your-subdomain",
+        "ZENDESK_OAUTH_TOKEN": "your-oauth-token"
+      }
+    }
+  }
+}
+```
 
-Zendesk uses API token authentication (email/token pair):
+### Getting Your API Token
 
-1. **Get token**: Admin Center → Apps and integrations → APIs → Zendesk API → Add API token
-2. **Format**: `email/token:api_token` (handled automatically by MCP server)
-3. **Subdomain**: Your Zendesk URL subdomain (e.g., `acme` for `acme.zendesk.com`)
+1. Go to Admin → Channels → API
+2. Enable token access
+3. Click "Add API token"
+4. Copy the generated token
+5. Your subdomain is the part before `.zendesk.com` in your Zendesk URL
 
-📚 **Official docs**: [Zendesk API Authentication](https://developer.zendesk.com/api-reference/ticketing/introduction/#security-and-authentication)
-
-## 🎯 Example Prompts
-
-Once connected to Claude, use natural language:
-
-**Ticket Management:**
-- *"List all open tickets sorted by priority"*
-- *"Get full details on ticket #12345 including all comments"*
-- *"Create a ticket: subject 'Login failure', description 'User can't access dashboard', priority urgent, assign to group ID 123"*
-- *"Update ticket #6789: set status to pending, add tag 'needs-engineering'"*
-
-**Search & Filtering:**
-- *"Search for tickets with 'password reset' in subject, opened in last 7 days"*
-- *"Find all tickets assigned to me with priority high or urgent"*
-- *"Show tickets tagged 'billing' that are still open after 30 days"*
-
-**User Management:**
-- *"List all agents in the support team"*
-- *"Find end-users with 'gmail.com' in their email"*
-
-**Advanced Workflows:**
-- *"Add internal note to ticket #4567: 'Escalated to engineering team'"*
-- *"Bulk close tickets tagged 'spam' with comment 'Issue resolved'"*
-- *"Generate weekly report: tickets created, solved, pending, by priority"*
-
-## 🛠️ Development
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Zendesk account with agent access and API token
-
-### Setup
+### Running the Server
 
 ```bash
-git clone https://github.com/BusyBee3333/Zendesk-MCP-2026-Complete.git
-cd zendesk-mcp-2026-complete
+# With environment variables
+ZENDESK_SUBDOMAIN=yourcompany \
+ZENDESK_EMAIL=admin@yourcompany.com \
+ZENDESK_API_TOKEN=your_token \
+zendesk-mcp
+```
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     MCP Client (Claude, etc.)                │
+└────────────────────────┬────────────────────────────────────┘
+                         │ MCP Protocol
+┌────────────────────────▼────────────────────────────────────┐
+│                   Zendesk MCP Server                         │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Server Layer (server.ts)                 │   │
+│  │  - Tool registration & routing                        │   │
+│  │  - App registration & serving                         │   │
+│  │  - Request validation                                 │   │
+│  └────────────┬─────────────────────────┬─────────────────┘  │
+│               │                         │                    │
+│  ┌────────────▼────────────┐  ┌─────────▼──────────────┐    │
+│  │   16 Tool Categories    │  │   13 React UI Apps     │    │
+│  │  - tickets-tools        │  │  - ticket-dashboard    │    │
+│  │  - users-tools          │  │  - sla-dashboard       │    │
+│  │  - organizations-tools  │  │  - ticket-detail       │    │
+│  │  - groups-tools         │  │  - search-results      │    │
+│  │  - tags-tools           │  │  - ticket-grid         │    │
+│  │  - brands-tools         │  │  - org-detail          │    │
+│  │  - triggers-tools       │  │  - suspended-tickets   │    │
+│  │  - macros-tools         │  │  - satisfaction-dash.  │    │
+│  │  - automations-tools    │  │  - org-grid            │    │
+│  │  - views-tools          │  │  - user-detail         │    │
+│  │  - custom-fields-tools  │  │  - macro-manager       │    │
+│  │  - sla-tools            │  │  - view-executor       │    │
+│  │  - satisfaction-tools   │  │  - user-grid           │    │
+│  │  - suspended-tickets-t. │  └────────────────────────┘    │
+│  │  - search-tools         │                                │
+│  │  (89 total tools)       │                                │
+│  └────────────┬─────────────┘                                │
+│               │                                              │
+│  ┌────────────▼─────────────────────────────────────────┐   │
+│  │          ZendeskClient (clients/zendesk.ts)          │   │
+│  │  - HTTP request handling                             │   │
+│  │  - Authentication (OAuth / API Token)                │   │
+│  │  - Rate limiting                                     │   │
+│  │  - Automatic pagination                              │   │
+│  │  - Error handling                                    │   │
+│  └────────────┬─────────────────────────────────────────┘   │
+└───────────────┼──────────────────────────────────────────────┘
+                │ HTTPS
+┌───────────────▼──────────────────────────────────────────────┐
+│              Zendesk Support API (v2)                        │
+│  https://yoursubdomain.zendesk.com/api/v2                    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+## 🛠️ Complete Tool Reference
+
+### Ticket Operations (14 tools)
+- `zendesk_list_tickets` - List all tickets with filtering
+- `zendesk_get_ticket` - Get detailed ticket information
+- `zendesk_create_ticket` - Create a new support ticket
+- `zendesk_update_ticket` - Update ticket fields and status
+- `zendesk_delete_ticket` - Delete a ticket
+- `zendesk_bulk_update_tickets` - Update multiple tickets at once
+- `zendesk_merge_tickets` - Merge multiple tickets into one
+- `zendesk_add_ticket_tags` - Add tags to a ticket
+- `zendesk_remove_ticket_tags` - Remove tags from a ticket
+- `zendesk_add_ticket_comment` - Add a comment to a ticket
+- `zendesk_list_ticket_comments` - List all comments on a ticket
+- `zendesk_list_ticket_forms` - List available ticket forms
+- `zendesk_get_ticket_form` - Get ticket form details
+- `zendesk_get_satisfaction_rating` - Get CSAT rating for a ticket
+
+### User Operations (10 tools)
+- `zendesk_list_users` - List all users with pagination
+- `zendesk_get_user` - Get detailed user information
+- `zendesk_create_user` - Create a new user
+- `zendesk_update_user` - Update user profile
+- `zendesk_delete_user` - Delete a user
+- `zendesk_search_users` - Search users by query
+- `zendesk_merge_users` - Merge duplicate user accounts
+- `zendesk_list_user_identities` - List user's email/phone identities
+- `zendesk_set_user_password` - Set or reset user password
+- `zendesk_get_user_related` - Get user's tickets and requests
+
+### Organization Operations (8 tools)
+- `zendesk_list_organizations` - List all organizations
+- `zendesk_get_organization` - Get organization details
+- `zendesk_create_organization` - Create a new organization
+- `zendesk_update_organization` - Update organization info
+- `zendesk_delete_organization` - Delete an organization
+- `zendesk_search_organizations` - Search organizations by query
+- `zendesk_list_organization_memberships` - List org memberships
+- `zendesk_create_organization_membership` - Add user to org
+
+### Group Operations (6 tools)
+- `zendesk_list_groups` - List all agent groups
+- `zendesk_get_group` - Get group details
+- `zendesk_create_group` - Create a new group
+- `zendesk_update_group` - Update group information
+- `zendesk_delete_group` - Delete a group
+- `zendesk_list_group_memberships` - List members of a group
+
+### Macro Operations (6 tools)
+- `zendesk_list_macros` - List all macros
+- `zendesk_get_macro` - Get macro details
+- `zendesk_apply_macro` - Apply macro to ticket(s)
+- `zendesk_create_macro` - Create a new macro
+- `zendesk_update_macro` - Update existing macro
+- `zendesk_delete_macro` - Delete a macro
+
+### Trigger Operations (6 tools)
+- `zendesk_list_triggers` - List all triggers
+- `zendesk_get_trigger` - Get trigger details
+- `zendesk_create_trigger` - Create a new trigger
+- `zendesk_update_trigger` - Update trigger configuration
+- `zendesk_delete_trigger` - Delete a trigger
+- `zendesk_reorder_triggers` - Change trigger execution order
+
+### View Operations (7 tools)
+- `zendesk_list_views` - List all views
+- `zendesk_get_view` - Get view configuration
+- `zendesk_create_view` - Create a new view
+- `zendesk_update_view` - Update view filters/columns
+- `zendesk_delete_view` - Delete a view
+- `zendesk_execute_view` - Execute view and get results
+- `zendesk_count_view` - Get ticket count for a view
+
+### Automation Operations (5 tools)
+- `zendesk_list_automations` - List all automations
+- `zendesk_get_automation` - Get automation details
+- `zendesk_create_automation` - Create a new automation
+- `zendesk_update_automation` - Update automation rules
+- `zendesk_delete_automation` - Delete an automation
+
+### SLA Policy Operations (5 tools)
+- `zendesk_list_sla_policies` - List all SLA policies
+- `zendesk_get_sla_policy` - Get SLA policy details
+- `zendesk_create_sla_policy` - Create a new SLA policy
+- `zendesk_update_sla_policy` - Update SLA policy rules
+- `zendesk_delete_sla_policy` - Delete an SLA policy
+
+### Custom Field Operations (9 tools)
+- `zendesk_list_ticket_fields` - List ticket custom fields
+- `zendesk_get_ticket_field` - Get ticket field details
+- `zendesk_create_ticket_field` - Create new ticket field
+- `zendesk_update_ticket_field` - Update ticket field config
+- `zendesk_delete_ticket_field` - Delete a ticket field
+- `zendesk_list_user_fields` - List user custom fields
+- `zendesk_get_user_field` - Get user field details
+- `zendesk_list_organization_fields` - List org custom fields
+- `zendesk_get_organization_field` - Get org field details
+
+### Brand Operations (4 tools)
+- `zendesk_list_brands` - List all brands
+- `zendesk_get_brand` - Get brand details
+- `zendesk_create_brand` - Create a new brand
+- `zendesk_update_brand` - Update brand settings
+
+### Suspended Ticket Operations (4 tools)
+- `zendesk_list_suspended_tickets` - List suspended tickets
+- `zendesk_get_suspended_ticket` - Get suspended ticket details
+- `zendesk_recover_suspended_ticket` - Recover suspended ticket
+- `zendesk_delete_suspended_ticket` - Delete suspended ticket
+
+### Search Operations (4 tools)
+- `zendesk_search` - Universal search across all objects
+- `zendesk_search_tickets` - Search tickets with filters
+- `zendesk_search_users` - Search users with filters
+- `zendesk_search_organizations` - Search orgs with filters
+
+### Tag Operations (2 tools)
+- `zendesk_list_tags` - List all tags in use
+- `zendesk_autocomplete_tags` - Autocomplete tag suggestions
+
+### Satisfaction Rating Operations (2 tools)
+- `zendesk_list_satisfaction_ratings` - List CSAT ratings
+- `zendesk_get_satisfaction_rating` - Get specific rating
+
+## 🎨 Interactive UI Applications
+
+The server includes 13 rich React applications for interactive data exploration:
+
+### Dashboard Applications
+
+#### 1. **Ticket Dashboard** (`ticket-dashboard`)
+Interactive overview of ticket metrics and trends:
+- Real-time ticket count by status (new, open, pending, solved)
+- Priority distribution charts
+- Recent activity timeline
+- Quick stats: response time, resolution time, satisfaction score
+- Filter by assignee, group, or date range
+
+#### 2. **SLA Dashboard** (`sla-dashboard`)
+Monitor SLA compliance and performance:
+- SLA policy overview with breach counts
+- Upcoming breaches (within 1 hour)
+- Policy-level compliance metrics
+- Historical breach trends
+- Filter by policy, priority, or time range
+
+#### 3. **Satisfaction Dashboard** (`satisfaction-dashboard`)
+Customer satisfaction insights:
+- Overall CSAT score and distribution
+- Ratings over time (good/bad trend)
+- Top-rated vs lowest-rated tickets
+- Agent performance by satisfaction
+- Comment analysis and themes
+
+### Detail View Applications
+
+#### 4. **Ticket Detail** (`ticket-detail`)
+Comprehensive single-ticket view:
+- Full ticket details with custom fields
+- Complete comment thread with timestamps
+- Assignee and requester information
+- Tag management interface
+- Status update and priority change
+- Related tickets and organizations
+
+#### 5. **User Detail** (`user-detail`)
+Complete user profile and activity:
+- User profile with all custom fields
+- Ticket history (requested, assigned, CC'd)
+- Organization memberships
+- Email and phone identities
+- Role and permissions
+- Activity timeline
+
+#### 6. **Organization Detail** (`org-detail`)
+Organization overview and management:
+- Organization profile with custom fields
+- Member list with roles
+- Ticket history and statistics
+- Domain information
+- Notes and tags
+- Associated users and groups
+
+### Grid/List Applications
+
+#### 7. **Ticket Grid** (`ticket-grid`)
+Advanced ticket list with filtering:
+- Sortable, filterable data grid
+- Inline editing of status and priority
+- Bulk actions (assign, tag, close)
+- Custom column selection
+- Export to CSV
+- Saved filters and views
+
+#### 8. **User Grid** (`user-grid`)
+User management interface:
+- Searchable user list
+- Filter by role, organization, status
+- Bulk user operations
+- Quick edit mode
+- Export user data
+- Role assignment
+
+#### 9. **Organization Grid** (`org-grid`)
+Organization management:
+- Sortable organization list
+- Filter by domain, size, tier
+- Bulk operations
+- Member count and ticket stats
+- Quick actions (add user, view tickets)
+
+### Specialized Applications
+
+#### 10. **Suspended Tickets** (`suspended-tickets`)
+Manage spam and suspended tickets:
+- List all suspended tickets with reasons
+- Preview ticket content
+- Bulk recover or delete
+- Spam pattern detection
+- Export for analysis
+
+#### 11. **Macro Manager** (`macro-manager`)
+Create and manage macros:
+- Visual macro builder
+- Action preview
+- Test macro on sample tickets
+- Usage statistics
+- Duplicate and modify existing macros
+- Category organization
+
+#### 12. **View Executor** (`view-executor`)
+Execute and visualize views:
+- Select from available views
+- Execute with custom parameters
+- Visualize results in chart/table
+- Export view results
+- Schedule view execution
+- Compare multiple views
+
+#### 13. **Search Results** (`search-results`)
+Universal search interface:
+- Multi-object search (tickets, users, orgs)
+- Advanced filter builder
+- Sort and group results
+- Quick preview
+- Bulk operations on results
+- Save searches
+
+### Accessing UI Applications
+
+UI apps are served via the MCP `apps` capability:
+
+```typescript
+// Apps are automatically registered and available via MCP
+// Use the MCP client's app interface to launch them
+```
+
+Each app is a standalone React application with:
+- Responsive design for desktop and mobile
+- Real-time data updates
+- Inline editing where appropriate
+- Export capabilities
+- Keyboard shortcuts
+- Dark mode support
+
+## 📚 Usage Examples
+
+### Example 1: Create and Update a Ticket
+
+```typescript
+// Create a ticket
+const ticket = await zendesk_create_ticket({
+  subject: "Customer needs help with API integration",
+  description: "Customer is having trouble authenticating",
+  priority: "high",
+  requester: { email: "customer@example.com" },
+  tags: ["api", "integration", "priority"]
+});
+
+// Add a comment
+await zendesk_add_ticket_comment({
+  ticket_id: ticket.id,
+  body: "I've reviewed the logs and found the issue",
+  public: true
+});
+
+// Update status
+await zendesk_update_ticket({
+  id: ticket.id,
+  status: "solved",
+  satisfaction_rating: { score: "good" }
+});
+```
+
+### Example 2: User Management Workflow
+
+```typescript
+// Search for a user
+const users = await zendesk_search_users({
+  query: "email:john@example.com"
+});
+
+// Get user details with related data
+const userDetails = await zendesk_get_user_related({
+  id: users[0].id
+});
+
+// Update user's organization
+await zendesk_create_organization_membership({
+  user_id: users[0].id,
+  organization_id: 12345
+});
+
+// Set user as an agent
+await zendesk_update_user({
+  id: users[0].id,
+  role: "agent",
+  groups: [101, 102]
+});
+```
+
+### Example 3: Automation Setup
+
+```typescript
+// Create an SLA policy
+const slaPolicy = await zendesk_create_sla_policy({
+  title: "Premium Customer SLA",
+  description: "4-hour response time for premium customers",
+  filter: {
+    all: [
+      { field: "custom_fields.customer_tier", operator: "is", value: "premium" }
+    ]
+  },
+  policy_metrics: [
+    {
+      priority: "high",
+      metric: "first_reply_time",
+      target: 240 // 4 hours in minutes
+    }
+  ]
+});
+
+// Create a trigger to auto-assign
+await zendesk_create_trigger({
+  title: "Auto-assign premium tickets",
+  conditions: {
+    all: [
+      { field: "custom_fields.customer_tier", operator: "is", value: "premium" },
+      { field: "status", operator: "is", value: "new" }
+    ]
+  },
+  actions: [
+    { field: "group_id", value: 101 },
+    { field: "priority", value: "high" }
+  ]
+});
+```
+
+### Example 4: Reporting and Analytics
+
+```typescript
+// Execute a view to get filtered tickets
+const highPriorityTickets = await zendesk_execute_view({
+  id: "high_priority_open",
+  sort_by: "created_at",
+  sort_order: "desc"
+});
+
+// Get satisfaction ratings for analysis
+const ratings = await zendesk_list_satisfaction_ratings({
+  start_time: "2024-01-01",
+  end_time: "2024-01-31"
+});
+
+// Calculate CSAT score
+const goodRatings = ratings.filter(r => r.score === "good").length;
+const totalRatings = ratings.length;
+const csatScore = (goodRatings / totalRatings) * 100;
+
+// Search for patterns
+const escalatedTickets = await zendesk_search_tickets({
+  query: "status:open priority:urgent created>2024-01-01"
+});
+```
+
+## 🔧 Development
+
+### Project Structure
+
+```
+zendesk-mcp-server/
+├── src/
+│   ├── clients/
+│   │   └── zendesk.ts          # API client with auth & pagination
+│   ├── tools/                   # 16 tool category files
+│   │   ├── tickets-tools.ts
+│   │   ├── users-tools.ts
+│   │   ├── organizations-tools.ts
+│   │   ├── groups-tools.ts
+│   │   ├── tags-tools.ts
+│   │   ├── brands-tools.ts
+│   │   ├── triggers-tools.ts
+│   │   ├── macros-tools.ts
+│   │   ├── automations-tools.ts
+│   │   ├── views-tools.ts
+│   │   ├── custom-fields-tools.ts
+│   │   ├── sla-tools.ts
+│   │   ├── satisfaction-tools.ts
+│   │   ├── suspended-tickets-tools.ts
+│   │   └── search-tools.ts
+│   ├── ui/react-app/           # 13 React applications
+│   │   ├── ticket-dashboard/
+│   │   ├── sla-dashboard/
+│   │   ├── ticket-detail/
+│   │   ├── search-results/
+│   │   ├── ticket-grid/
+│   │   ├── org-detail/
+│   │   ├── suspended-tickets/
+│   │   ├── satisfaction-dashboard/
+│   │   ├── org-grid/
+│   │   ├── user-detail/
+│   │   ├── macro-manager/
+│   │   ├── view-executor/
+│   │   └── user-grid/
+│   ├── types/
+│   │   └── index.ts            # TypeScript type definitions
+│   ├── server.ts               # MCP server setup & registration
+│   └── main.ts                 # Entry point
+├── scripts/
+│   └── build-apps.js           # Vite app build script
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/BusyBee3333/mcpengine.git
+cd mcpengine/servers/zendesk
+
+# Install dependencies
 npm install
-cp .env.example .env
-# Edit .env with your Zendesk credentials
+
+# Type check
+npm run typecheck
+
+# Build TypeScript and React apps
 npm run build
+
+# Run in development mode
+npm run dev
+```
+
+### Running Tests
+
+```bash
+# Type checking
+npm run typecheck
+
+# Test with a real Zendesk instance
+ZENDESK_SUBDOMAIN=test \
+ZENDESK_EMAIL=admin@test.com \
+ZENDESK_API_TOKEN=your_token \
 npm start
 ```
 
-### Testing
+## 🔒 Security
 
-```bash
-npm test                  # Run all tests
-npm run test:watch        # Watch mode
-npm run test:coverage     # Coverage report
-```
+- **Never commit credentials**: Use environment variables for all sensitive data
+- **Use API tokens**: Prefer API tokens over passwords for authentication
+- **Restrict permissions**: Create Zendesk API tokens with minimal required permissions
+- **Rotate tokens**: Regularly rotate API tokens
+- **Monitor usage**: Review API access logs in Zendesk admin
+
+## 📊 Rate Limiting
+
+The Zendesk API has rate limits:
+- **Standard**: 700 requests per minute
+- **Enterprise**: 2000 requests per minute
+
+This server automatically:
+- Tracks remaining rate limit quota
+- Pauses requests when approaching limits
+- Resumes when quota resets
+- Provides rate limit info in errors
 
 ## 🐛 Troubleshooting
 
-### "Zendesk API error: 401 Unauthorized"
-- Double-check your API token is correct
-- Verify your email address matches your Zendesk agent account
-- Ensure your subdomain is correct (no `.zendesk.com`, just the subdomain)
-- Check that your API token hasn't been revoked in Admin Center
+### Authentication Errors
 
-### "Zendesk API error: 403 Forbidden"
-- Your API token may lack required permissions
-- Verify your agent role has access to tickets and users
-- Some operations require admin permissions (check Zendesk docs)
+```
+Error: Invalid credentials
+```
+- Verify your subdomain is correct (no `.zendesk.com`)
+- Check email/API token combination
+- Ensure API token is enabled in Zendesk admin
 
-### "Zendesk API error: 404 Not Found"
-- Ticket or user ID doesn't exist
-- Check the ID is correct (use `list_tickets` or `search_tickets` to find IDs)
-- Ticket may have been deleted or merged
+### Rate Limit Errors
 
-### "Tools not appearing in Claude"
-- Restart Claude Desktop after updating config
-- Check that the path in `claude_desktop_config.json` is absolute
-- Verify build completed: `ls dist/index.js`
-- Check Claude logs: `tail -f ~/Library/Logs/Claude/mcp*.log`
+```
+Error: Rate limit exceeded
+```
+- The server automatically handles this
+- For heavy usage, consider caching
+- Use pagination parameters to reduce request count
 
-## 📖 Resources
+### TypeScript Errors
 
-- [Zendesk Support API Reference](https://developer.zendesk.com/api-reference/ticketing/introduction/)
-- [Zendesk Search Reference](https://support.zendesk.com/hc/en-us/articles/4408886879258-Zendesk-Support-search-reference)
-- [MCP Protocol Specification](https://modelcontextprotocol.io/)
-- [Claude Desktop Documentation](https://claude.ai/desktop)
+```
+Error: Cannot find module '@modelcontextprotocol/sdk'
+```
+- Run `npm install` to install dependencies
+- Ensure Node.js version >= 18.0.0
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/sla-tracking`)
-3. Commit your changes (`git commit -m 'Add SLA monitoring'`)
-4. Push to the branch (`git push origin feature/sla-tracking`)
-5. Open a Pull Request
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with tests
+4. Submit a pull request
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) for details
+MIT License - see LICENSE file for details
 
-## 🙏 Credits
+## 🔗 Links
 
-Built by [MCPEngage](https://mcpengage.com) — AI infrastructure for business software.
+- [Zendesk API Documentation](https://developer.zendesk.com/api-reference/)
+- [Model Context Protocol](https://modelcontextprotocol.io)
+- [MCPEngine Repository](https://github.com/BusyBee3333/mcpengine)
+- [Report Issues](https://github.com/BusyBee3333/mcpengine/issues)
 
-Want more MCP servers? Check our [catalog](https://mcpengine.pages.dev) covering 30+ business platforms.
+## 📞 Support
+
+- GitHub Issues: [mcpengine/issues](https://github.com/BusyBee3333/mcpengine/issues)
+- Documentation: [MCPEngine Docs](https://github.com/BusyBee3333/mcpengine/docs)
 
 ---
 
-**Questions?** Open an issue or join our [Discord community](https://discord.gg/mcpengage).
+**Built with ❤️ by the MCPEngine team**
+
+*Making Zendesk automation accessible through the Model Context Protocol*
